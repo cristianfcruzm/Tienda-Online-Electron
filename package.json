@@ -1,0 +1,40 @@
+{
+  "name": "express-tienda-online",
+  "version": "1.0.0",
+  "description": "Proyecto-Tienda-En-Express",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "lint": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cristianfcruzm/Tienda-Online-Electron.git"
+  },
+  "author": "Cristian Cruz Moreno",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cristianfcruzm/Tienda-Online-Electron/issues"
+  },
+  "homepage": "https://github.com/cristianfcruzm/Tienda-Online-Electron#readme",
+  "devDependencies": {
+    "@faker-js/faker": "^7.5.0",
+    "eslint": "^8.23.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.19",
+    "prettier": "^2.7.1"
+  },
+  "dependencies": {
+    "@hapi/boom": "^10.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "joi": "^17.6.0",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.5.0"
+  },
+  "engines": {
+    "node": "18.2.0"
+  }
+}
