@@ -1,11 +1,14 @@
 const express = require('express');
 const UserService = require('../services/users.service');
+const validatorHandler = require('../middlewares/validator.handler');
+const {createUserSchema,updateUserSchema, getUserSchema} = require('../schemas/users.shema');
 
 const router = express.Router();
 const service = new UserService();
 
 router.get('/', async (req, res, next) => {
   try {
+    //console.log('hola desde get');
     const users = await service.find();
     res.json(users);
   } catch (error) {
@@ -23,23 +26,20 @@ router.get('/', async (req, res, next) => {
   // }
 });
 
-router.get('/:id', async(req, res, next) => {
+router.get('/:id',validatorHandler(getUserSchema, 'params'), async(req, res, next) => {
   try {
     const id = req.params.id;
     const user = await service.findOne(id);
-    const userId = user === undefined ? 'Sin Información' : user.idusuario;
-
-    id === userId
-      ? res.status(200).json(user)
-      : res.status(404).json({ message: 'Invalid id user' });
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   };
 });
 
 // Recibir un nuevo parametro de usuario.
-router.post('/', async (req, res, next) => {
+router.post('/',validatorHandler(createUserSchema, 'body'), async (req, res, next) => {
   try {
+    console.log('hola');
     const body = req.body;
     const newUser = await service.create(body);
     res.status(201).json(newUser);
@@ -49,7 +49,8 @@ router.post('/', async (req, res, next) => {
 });
 
 //actualizar un parametro de usuario
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id',validatorHandler(getUserSchema, 'params'),
+validatorHandler(updateUserSchema, 'body'), async (req, res, next) => {
   try {
     const id = req.params.id;
     const body = req.body;
@@ -61,7 +62,7 @@ router.patch('/:id', async (req, res, next) => {
 });
 
 //Eliminar un usuario
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id',validatorHandler(getUserSchema, 'params'), async (req, res, next) => {
   try {
     const id = req.params.id;
     const respuesta = await service.delete(id);

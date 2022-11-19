@@ -1,5 +1,7 @@
 const { faker } = require('@faker-js/faker');
 const boom = require('@hapi/boom');
+const { Op } = require('sequelize');
+const { models } = require('../libs/sequelize');
 
 class ProductService {
   constructor() {
@@ -22,29 +24,46 @@ class ProductService {
   }
 
   async create(data) {
-    const newProduct = {
-      id: faker.datatype.uuid(),
-      ...data,
-    };
-    this.products.push(newProduct);
+    const newProduct = await models.Product.create(data);
     return newProduct;
   }
-  async find() {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(this.products);
-      }, 2000);
-    });
+  async find(query) {
+    //paginación con parametros dinamicos
+    const options = {
+      include: ['category'],
+      where: {}
+    };
+    //variables de Query que pueden venir en params
+    const limit = query.limit;
+    const offset = query.offset;
+    const price = query.price;
+    const price_min = query.price_min;
+    const price_max = query.price_max;
+    if (limit && offset){
+      options.limit = Number(limit);
+      options.offset = Number(offset);
+    }
+    if(price){
+      options.where.price = price;
+    }
+    if (price_min && price_max){
+      options.where.price ={
+        [Op.gte]: price_min,
+        [Op.lte]: price_max,
+      }
+    }
+    const products = await models.Product.findAll(options);
+    return products;
   }
   async findOne(id) {
-    const producto = this.products.find((item) => item.id === id);
-    if (!producto) {
-      throw boom.notFound('product notFound');
+    const product = this.products.find((item) => item.id === id);
+    if (!product) {
+      throw boom.notFound('product not found');
     }
-    if (producto.isBlock){
+    if (product.isBlock) {
       throw boom.conflict('product is block');
     }
-    return producto;
+    return product;
   }
   async update(id, changes) {
     const index = this.products.findIndex((item) => item.id === id);
