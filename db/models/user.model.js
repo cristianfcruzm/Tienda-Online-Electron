@@ -9,10 +9,15 @@ const UserSchema = {
   },
   email: { allowNull: false, type: DataTypes.STRING, unique: true },
   password: { allowNull: false, type: DataTypes.STRING },
+  recoveryToken: {
+    field: 'recovery_token',
+    allowNull: true,
+    type: DataTypes.STRING,
+  },
   role: {
     allowNull: false,
     type: DataTypes.STRING,
-    defaultValue: 'customer'
+    defaultValue: 'customer',
   },
   createdAt: {
     allowNull: false,
@@ -25,7 +30,7 @@ class User extends Model {
   static associate(models) {
     this.hasOne(models.Customer, {
       as: 'customer',
-      foreignKey : 'userId'
+      foreignKey: 'userId',
     });
   }
   static config(sequelize) {

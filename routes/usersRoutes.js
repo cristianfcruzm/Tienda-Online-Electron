@@ -39,7 +39,6 @@ router.get('/:id',validatorHandler(getUserSchema, 'params'), async(req, res, nex
 // Recibir un nuevo parametro de usuario.
 router.post('/',validatorHandler(createUserSchema, 'body'), async (req, res, next) => {
   try {
-    console.log('hola');
     const body = req.body;
     const newUser = await service.create(body);
     res.status(201).json(newUser);

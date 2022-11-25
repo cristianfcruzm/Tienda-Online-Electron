@@ -9,6 +9,7 @@ const {
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const cors = require('cors');
+const {checkApiKey} = require('./middlewares/auth.handler')
 
 //Se implementa el Swagger para el servicio
 const swaggerOptions = {
@@ -49,6 +50,9 @@ const options = {
 };
 
 app.use(cors(options));
+//------------------------USO DEL PASSPORT----------------------------------------------------------------
+require('./utils/auth')
+
 //------------------------USO DEL ROUTER----------------------------------------------------------------
 
 routerApi(app);
@@ -60,6 +64,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.get('/', (req, res) => {
   res.status(200).send('Test');
 });
+
+app.get('/nueva-ruta', checkApiKey ,(req, res) => {
+  res.status(200).send('Nueva ruta');
+});
+
 
 app.use(logErrors);
 app.use(ormErrorHandler);
